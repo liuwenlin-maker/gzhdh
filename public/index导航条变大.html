@@ -25,45 +25,50 @@
       background: #444;
       color: white;
     }
-	/*"统计信息"的样式*/
     .stats-info {
       margin: 10px 0 0;
-      font-size: 16px; /* 字体调大（比原来大2px） */
-      color: #cccccc; /* 颜色改为纯白色（更清晰） */
-      line-height: 1.5; /* 增加行高，避免文字拥挤 */
-}
+      font-size: 16px;
+      color: #cccccc;
+      line-height: 1.5;
+    }
     .index-bar {
       position: fixed;
-      right: 20px;
-      top: 200px;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
       font-size: 14px;
       background: #fff;
       border: 1px solid #ddd;
       border-radius: 4px;
-      padding: 8px 6px;
+      padding: 5px 3px;
       z-index: 100;
     }
-	/*右侧字母导航样式*/
     .index-bar a {
-      display: flex; /* 改为flex布局，方便居中 */
-      align-items: center; /* 垂直居中对齐 */
-      justify-content: center; /* 水平居中对齐 */
-      height: 22px; /* 固定每个字母的高度（可根据需要调整） */
-      padding: 0 0px; /* 适当调整左右间距 */
+      display: block;
+      width: 32px;  /* 增大点击区域宽度 */
+      height: 32px; /* 增大点击区域高度 */
+      line-height: 32px;
+      text-align: center;
       color: #333;
       text-decoration: none;
       font-weight: bold;
+      margin: 2px auto; /* 增加间距，避免误触 */
+      border-radius: 4px; /* 圆角更易点击 */
     }
     .index-bar a:hover {
       background-color: #f1f1f1;
+    }
+    /* 增加点击时的反馈（移动端触摸反馈） */
+    .index-bar a:active {
+      background-color: #444;
+      color: white;
     }
     .section {
       padding: 16px 20px;
       border-bottom: 1px solid #eee;
       display: flex;
       align-items: center;
-      cursor: pointer; /* 显示为手型 */
-      
+      cursor: pointer;
       -webkit-tap-highlight-color: transparent;
     }
     .section:hover {
@@ -92,8 +97,6 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
       text-overflow: ellipsis;
-      word-break: break-word;
-      white-space: normal;
     }
     .footer {
       text-align: center;
@@ -107,7 +110,25 @@
       font-weight: bold;
       color: #555;
     }
-}
+    /* 二维码弹窗 */
+    .qr-mask {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .qr-mask img {
+      max-width: 80%;
+      max-height: 80%;
+      border: 5px solid white;
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
@@ -583,77 +604,83 @@
     </div>
   </div>
 
-  <script>
-    // === 图片路径配置变量 ===
-    const IMG_BASE_PATH = 'image/';   // 公众号头像图片路径
-    const QR_CODE_PATH = 'qrcode/';   // 二维码图片路径
+<script>
+    // 图片路径配置
+    const IMG_BASE_PATH = 'image/';
+    const QR_CODE_PATH = 'qrcode/';
 
-    // 自动设置头像图片的 src
+    // 设置头像图片路径
     document.querySelectorAll('img[data-img]').forEach(img => {
-      const filename = img.getAttribute('data-img');
-      img.src = IMG_BASE_PATH + filename;
+      img.src = IMG_BASE_PATH + img.getAttribute('data-img');
     });
 
-    // 弹出大图二维码
+    // 优化字母导航点击事件
+    document.querySelectorAll('.index-bar a').forEach(link => {
+      // 同时处理点击（桌面端）和触摸（移动端）事件
+      link.addEventListener('click', handleNavClick);
+      link.addEventListener('touchstart', handleNavClick); // 触摸开始时立即响应
+
+      function handleNavClick(e) {
+        e.preventDefault(); // 阻止默认跳转行为
+        e.stopPropagation(); // 阻止事件冒泡
+
+        const targetId = this.getAttribute('href').substring(1);
+        const targetElement = document.getElementById(targetId);
+        
+        if (targetElement) {
+          // 使用requestAnimationFrame优化滚动性能
+          requestAnimationFrame(() => {
+            const offsetTop = targetElement.offsetTop - 10;
+            window.scrollTo({
+              top: offsetTop,
+              behavior: 'instant' // 即时滚动，提升响应速度
+            });
+            history.pushState(null, null, '#' + targetId);
+          });
+        }
+      }
+    });
+
+    // 显示二维码
     function showQr(qrCodeUrl, accountName) {
-      // 如果路径不是以 http 开头，则加上前缀
+      // 构建完整路径
       if (!qrCodeUrl.startsWith('http')) {
         qrCodeUrl = QR_CODE_PATH + qrCodeUrl;
       }
 
       // 创建遮罩层
       const mask = document.createElement('div');
-      mask.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.8);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-        cursor: pointer;
-      `;
-
-      // 创建大图
+      mask.className = 'qr-mask';
+      
+      // 创建图片元素
       const img = document.createElement('img');
       img.src = qrCodeUrl;
-      img.alt = `关注 ${accountName}`;
-      img.style.cssText = `
-        max-width: 80%;
-        max-height: 80%;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-      `;
-      img.onclick = (e) => e.stopPropagation(); // 阻止点击图片时关闭
-
+      img.alt = accountName;
+      
       // 点击遮罩关闭
       mask.appendChild(img);
-      mask.onclick = () => document.body.removeChild(mask);
+      mask.onclick = function() {
+        document.body.removeChild(mask);
+      };
+      
+      // 防止点击图片时关闭
+      img.onclick = function(e) {
+        e.stopPropagation();
+      };
       
       document.body.appendChild(mask);
     }
 
-    // 动态统计公众号数量并显示当前日期
+    // 统计公众号数量
     function updateStats() {
-      // 统计页面中所有带onclick="showQr"的.section元素（即公众号条目）
-      const totalAccounts = document.querySelectorAll('.section[onclick^="showQr"]').length;
-      
-      // 获取当前日期并格式化（年-月-日）
+      const total = document.querySelectorAll('.section').length;
       const now = new Date();
-      const year = now.getFullYear();
-      const month	 = String(now.getMonth() + 1).padStart(2, '0'); // 月份从0开始，需+1并补0
-      const day = String(now.getDate()).padStart(2, '0');
-      const currentDate = `${year}年${month}月${day}日`;
-      
-      // 更新统计信息到页面
+      const dateStr = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日`;
       document.getElementById('statsContainer').textContent = 
-        `截止${currentDate}，共接入${totalAccounts}个公众号，后续持续更新中`;
+        `截至${dateStr}，共接入${total}个公众号，后续持续更新中`;
     }
 
-    // 页面加载完成后执行统计
+    // 页面加载完成后执行
     window.onload = updateStats;
   </script>
 </body>
