@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>公众号导航</title>
+  <style>
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background-color: #f8f9fa;
+      padding: 20px;
+      margin: 0;
+    }
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .header {
+      padding: 20px;
+      text-align: center;
+      background: #444;
+      color: white;
+    }
+    .stats-info {
+      margin: 10px 0 0;
+      font-size: 16px;
+      color: #cccccc;
+      line-height: 1.5;
+    }
+    .index-bar {
+      position: fixed;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 5px 3px;
+      z-index: 100;
+    }
+    .index-bar a {
+      display: block;
+      width: 32px;  /* 增大点击区域宽度 */
+      height: 32px; /* 增大点击区域高度 */
+      line-height: 32px;
+      text-align: center;
+      color: #333;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 2px auto; /* 增加间距，避免误触 */
+      border-radius: 4px; /* 圆角更易点击 */
+    }
+    .index-bar a:hover {
+      background-color: #f1f1f1;
+    }
+    /* 增加点击时的反馈（移动端触摸反馈） */
+    .index-bar a:active {
+      background-color: #444;
+      color: white;
+    }
+    .section {
+      padding: 16px 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .section:hover {
+      background-color: #f1f1f1;
+    }
+    .section img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 12px;
+      object-fit: cover;
+    }
+    .section h3 {
+      margin: 0;
+      font-size: 16px;
+      color: #333;
+    }   
+    .section .tip {
+      font-size: 12px;
+      color: #888;
+      margin-top: 4px;
+      height: 36px;
+      line-height: 18px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .footer {
+      text-align: center;
+      padding: 12px;
+      font-size: 12px;
+      color: #888;
+    }
+    .letter-header {
+      background: #eee;
+      padding: 8px 20px;
+      font-weight: bold;
+      color: #555;
+    }
+    /* 二维码弹窗 */
+    .qr-mask {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .qr-mask img {
+      max-width: 80%;
+      max-height: 80%;
+      border: 5px solid white;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>我的公众号导航</h2>
+    
+      <!-- 新增统计信息区域 -->
+      <div class="stats-info" id="statsContainer"></div>
+    </div>
+
+    <!-- 字母索引栏 -->
+    <div class="index-bar">
+      <a href="#D">D</a>
+      <a href="#F">F</a>
+      <a href="#G">G</a>
+      <a href="#H">H</a>
+      <a href="#J">J</a>
+      <a href="#L">L</a>
+      <a href="#M">M</a>
+      <a href="#N">N</a>
+      <a href="#P">P</a>
+      <a href="#Q">Q</a>
+      <a href="#S">S</a>
+      <a href="#W">W</a>
+      <a href="#X">X</a>
+      <a href="#Y">Y</a>
+      <a href="#Z">Z</a>
+    </div>
+
+    <!-- 公众号列表 -->
+    <div id="D" class="letter-header">D</div>
+    <div class="section" onclick="showQr('东联防务天天报.png', '东联防务天天报')">
+      <img data-img="东联防务天天报.jpg">
+      <div>
+        <h3>东联防务天天报</h3>
+        <div class="tip">写报告选东联。东联咨询 专研国际 创见未来 合作共赢 智解国际关系密码。</div>
+      </div>
+    </div>
+
+    <div class="section" onclick="showQr('电波之矛.png', '电波之矛')">
+      <img data-img="电波之矛.jpg">
+      <div>
+        <h3>电波之矛</h3>
+        <div class="tip">旨在发布雷达、电子战以及电子信息系统行业的动态快讯新技术、国外防务公司及产品介绍、行业学习资料推荐和分享、行业趣闻、行业解惑等等</div>
+      </div>
+    </div>
+	
+    <div class="section" onclick="showQr('电科防务.png', '电科防务')">
+      <img data-img="电科防务.jpg">
+      <div>
+        <h3>电科防务</h3>
+        <div class="tip">聚焦国外电子信息行业战略规划、前沿技术、装备发展与应用等方面，开展动态实时跟踪与重大动向分析研判工作，为电子信息技术领域的管理决策、产业规划、行业发展提供情报支撑</div>
+      </div>
+    </div>	
+	
+    <div class="section" onclick="showQr('东方红智库.png', '东方红智库')">
+      <img data-img="东方红智库.jpg">
+      <div>
+        <h3>东方红智库</h3>
+        <div class="tip">关注国际战略安全形势，聚焦世界国防建设动态，深耕全球国防工业发展。</div>
+      </div>
+    </div>
+	
+    <div id="F" class="letter-header">F</div>	
+    <div class="section" onclick="showQr('防务硬科技.png', '防务硬科技')">
+      <img data-img="防务硬科技.jpg">
+      <div>
+        <h3>防务硬科技</h3>
+        <div class="tip">战争是科技的催化剂，80%以上的情报可从公开来源获得爱我中华cN不泄密，师夷长技以自强!</div>
+      </div>
+    </div>	
+	
+    <div id="G" class="letter-header">G</div>	
+    <div class="section" onclick="showQr('刊天下智库.png', '刊天下智库')">
+      <img data-img="刊天下智库.jpg">
+      <div>
+        <h3>刊天下智库</h3>
+        <div class="tip">网情舆情、将校论剑、战略视野、意识形态、外军防务、应急救援、问题研究、科技前瞻、历史纵横。</div>
+      </div>
+    </div>	
+	
+    <div class="section" onclick="showQr('国防科技要闻.png', '国防科技要闻')">
+      <img data-img="国防科技要闻.jpg">
+      <div>
+        <h3>国防科技要闻</h3>
+        <div class="tip">关注全球国防科技发展重大动向 分享国防科技信息优质产品和资源。</div>
+      </div>
+    </div>	
+	
+    <div class="section" onclick="showQr('国防制造.png', '国防制造')">
+      <img data-img="国防制造.jpg">
+      <div>
+        <h3>国防制造</h3>
+        <div class="tip">关注全球制造业动向，聚焦高端国防科技，提供国外国防制造领域最新资讯，评述技术研究进展，研判行业发展趋势。</div>
+      </div>
+    </div>	
+	
+    <div id="H" class="letter-header">H</div>		
+    <div class="section" onclick="showQr('华山穹剑.png', '华山穹剑')">
+      <img data-img="华山穹剑.jpg">
+      <div>
+        <h3>华山穹剑</h3>
+        <div class="tip">军情解读、国际纵论、社会热点、时政分析。</div>
+      </div>
+    </div>		
+	
+    <div class="section" onclick="showQr('海洋防务前沿.png', '海洋防务前沿')">
+      <img data-img="海洋防务前沿.jpg">
+      <div>
+        <h3>海洋防务前沿</h3>
+        <div class="tip">提供海洋防务最新资讯，发布前沿技术最新动态</div>
+      </div>
+    </div>	
+	
+    <div class="section" onclick="showQr('红旗导弹兵.png', '红旗导弹兵')">
+      <img data-img="红旗导弹兵.jpg">
+      <div>
+        <h3>红旗导弹兵</h3>
+        <div class="tip">国际国内时事、军事大事、美图美文。</div>
+      </div>
+    </div>		
+	
+    <div class="section" onclick="showQr('海空兵棋与AI.png', '海空兵棋与AI')">
+      <img data-img="海空兵棋与AI.jpg">
+      <div>
+        <h3>海空兵棋与AI</h3>
+        <div class="tip">游戏、AI、战争</div>
+      </div>
+    </div>	
+
+    <div class="section" onclick="showQr('海洋知圈.png', '海洋知圈')">
+      <img data-img="海洋知圈.jpg">
+      <div>
+        <h3>海洋知圈</h3>
+        <div class="tip">知晓海洋 ，探知海洋;拓展海洋知识视野，引领海洋科研前沿;与您分享海洋知识圈，打造海洋知识服务平台</div>
+      </div>
+    </div>	
+	
+    <div class="section" onclick="showQr('海研人.png', '海研人')">
+      <img data-img="海研人.jpg">
+      <div>
+        <h3>海研人</h3>
+        <div class="tip">由在读物理海洋研究生专为海洋学子打造的考研信息平台</div>
+      </div>
+    </div>		
+	
+    <div class="section" onclick="showQr('海鹰资讯.png', '海鹰资讯')">
+      <img data-img="海鹰资讯.jpg">
+      <div>
+        <h3>海鹰资讯</h3>
+        <div class="tip">北京海鹰科技情报研究所官方资讯平台。涵盖科技情报研究、信息咨询、标准化研究、知识产权研究、档案管理、资料翻译、科技刊物编辑出版、文献检索、影视传媒等多个专业领域。</div>
+      </div>
+    </div>
+	
+    <div id="J" class="letter-header">J</div>		
+    <div class="section" onclick="showQr('军鹰动态.png', '军鹰动态')">
+      <img data-img="军鹰动态.jpg">
+      <div>
+        <h3>军鹰动态</h3>
+        <div class="tip">北京军鹰装备技术研究院官方资讯平台</div>
+      </div>
+    </div>
+	
+    <div class="section" onclick="showQr('军事高科技在线.png', '军事高科技在线')">
+      <img data-img="军事高科技在线.jpg">
+      <div>
+        <h3>军事高科技在线</h3>
+        <div class="tip">公众号定位为培育创新文化、赋能科技强军，旨在提升国防科技大学科研学术影响力，促进学术交流，加强科学普及，推动成果转化，弘扬科学家精神，营造创新氛围，推动军事理论和科技创新发展，为实现建军一百年奋斗目标、加快建成世界一流军队提供科学支撑和引领</div>
+      </div>
+    </div>
+	
+    <div class="section" onclick="showQr('九万里.png', '九万里')">
+      <img data-img="九万里.jpg">
+      <div>
+        <h3>九万里</h3>
+        <div class="tip">扶摇九万里，静观大变局。</div>
+      </div>
+    </div>
+	
+    <div class="section" onclick="showQr('军事文摘.png', '军事文摘')">
+      <img data-img="军事文摘.jpg">
+      <div>
+        <h3>军事文摘</h3>
+        <div class="tip">深度研究国家安全战略、及时解读国际军事热点、详尽分析武器装备技术、立体透视军事历史人物</div>
+      </div>
+    </div>
+
+    <div id="L" class="letter-header">L</div>	
+    <div class="section" onclick="showQr('蓝德智库.png', '蓝德智库')">
+      <img data-img="蓝德智库.jpg">
+      <div>
+        <h3>蓝德智库</h3>
+        <div class="tip">国防科技信息研究与咨询机构</div>
+      </div>
+    </div>
+	
+    <div class="section" onclick="showQr('蓝军开源情报.png', '蓝军开源情报')">
+      <img data-img="蓝军开源情报.jpg">
+      <div>
+        <h3>蓝军开源情报</h3>
+        <div class="tip">蓝军开源情况大百科数据库。</div>
+      </div>
+    </div>
+
+    <div class="section" onclick="showQr('蓝德报告数据库.png', '蓝德报告数据库')">
+      <img data-img="蓝德报告数据库.jpg">
+      <div>
+        <h3>蓝德报告数据库</h3>
+        <div class="tip">调查研究国外先进技术，提高用户科学决策能力。库中专题报告和信息资料可作为国内用户开展相关课题研究的重要参考资料。</div>
+      </div>
+    </div>
+	
+    <div class="section" onclick="showQr('雷达通信电子战.png', '雷达通信电子战')">
+      <img data-img="雷达通信电子战.jpg">
+      <div>
+        <h3>雷达通信电子战</h3>
+        <div class="tip">专业知识服务: SAR，相控阵，MIMO 雷达 人工智能 AI 通信 干扰 抗干扰 电磁战 Matlab，Verilog，FPGA 软硬件设计</div>
+      </div>
+    </div>
+	
+    <div class="section" onclick="showQr('雷曼军事现代舰船.png', '雷曼军事现代舰船')">
+      <img data-img="雷曼军事现代舰船.jpg">
+      <div>
+        <h3>雷曼军事现代舰船</h3>
+        <div class="tip">现代舰船、雷曼军事、防务热点、深度解读</div>
+      </div>
+    </div>
+	
+	<div class="section" onclick="showQr('瞭望智库.png', '瞭望智库')">
+      <img data-img="瞭望智库.jpg">
+      <div>
+        <h3>瞭望智库</h3>
+        <div class="tip">瞭望智库是新华社批准成立的、瞭望周刊社旗下的国情国策研究机构。依托新华社遍布全球的信息调研网络与《瞭望》深耕国策研究的基因，瞭望智库与决策机构、海内外权威研究机构密切互动，充分发挥咨政建言、理论创新、舆论引导、社会服务、公共外交等功能。</div>
+      </div>
+    </div>
+	
+    <div id="M" class="letter-header">M</div>	
+    <div class="section" onclick="showQr('默虹海洋学习小站.png', '默虹海洋学习小站')">
+      <img data-img="默虹海洋学习小站.jpg">
+      <div>
+        <h3>默虹海洋学习小站</h3>
+        <div class="tip">科普，人文，兴趣话题</div>
+      </div>
+    </div>
+
+    <div id="N" class="letter-header">N</div>	
+    <div class="section" onclick="showQr('南海战略态势感知.png', '南海战略态势感知')">
+      <img data-img="南海战略态势感知.jpg">
+      <div>
+        <h3>南海战略态势感知</h3>
+        <div class="tip">为了全面客观掌握南海的动态和资讯，准确感知南海的军事、政治、经济、环境等态势，我们致力于聚合智力资源和开源信息，持续跟踪主要利益和责任相关方在南海的重要行动和重大政策动向，提供专业的数据服务和分析报告，助力各方控制竞争、超越竞争并走向合作。</div>
+      </div>
+    </div>	
+
+    <div id="P" class="letter-header">P</div>	
+    <div class="section" onclick="showQr('评估评估.png', '评估评估')">
+      <img data-img="评估评估.jpg">
+      <div>
+        <h3>评估评估</h3>
+        <div class="tip">国际政治、军事、经济和科学技术评估，战略、战役战术和技术净评估，以及社会企业和个人相关评估。</div>
+      </div>
+    </div>
+
+    <div id="Q" class="letter-header">Q</div>	
+    <div class="section" onclick="showQr('情报分析师.png', '情报分析师')">
+      <img data-img="情报分析师.jpg">
+      <div>
+        <h3>情报分析师</h3>
+        <div class="tip">聚焦情报与安全，培养专业人才，在竞争中保持领先!</div>
+      </div>
+    </div>	
+
+    <div id="S" class="letter-header">S</div>		
+    <div class="section" onclick="showQr('三目智汇防务.png', '三目智汇防务')">
+      <img data-img="三目智汇防务.jpg">
+      <div>
+        <h3>三目智汇防务</h3>
+        <div class="tip">三目智库，带您精确客观看世界!</div>
+      </div>
+    </div>
+	
+    <div class="section" onclick="showQr('水声之家.png', '水声之家')">
+      <img data-img="水声之家.jpg">
+      <div>
+        <h3>水声之家</h3>
+        <div class="tip">立足水声事业，关注水声动态，务实水声基础，传播水声知识!</div>
+      </div>
+    </div>	
+	
+    <div class="section" onclick="showQr('数字兵工厂.png', '数字兵工厂')">
+      <img data-img="数字兵工厂.jpg">
+      <div>
+        <h3>数字兵工厂</h3>
+        <div class="tip">中国军工领域优质内容创造者</div>
+      </div>
+    </div>
+	
+    <div id="W" class="letter-header">W</div>	
+    <div class="section" onclick="showQr('沃德舆情观察.png', '沃德舆情观察')">
+      <img data-img="沃德舆情观察.jpg">
+      <div>
+        <h3>沃德舆情观察</h3>
+        <div class="tip">解读每天发生的舆情，提供不一样的专业视角</div>
+      </div>
+    </div>
+
+    <div class="section" onclick="showQr('网信前沿观察.png', '网信前沿观察')">
+      <img data-img="网信前沿观察.jpg">
+      <div>
+        <h3>网信前沿观察</h3>
+        <div class="tip">远望智库旗下网络信息领域前沿资讯平台</div>
+      </div>
+    </div>
+	
+    <div class="section" onclick="showQr('外军防务研究前沿.png', '外军防务研究前沿')">
+      <img data-img="外军防务研究前沿.jpg">
+      <div>
+        <h3>外军防务研究前沿</h3>
+        <div class="tip">本号追踪外军最新前沿、探索最新军事理论，涵盖国防战略、装备科研、军贸防务、军队建设、日常勤务、作战训练和后勤保障等领域，提供定制化信息服务，翻译服务，课题研究，开源情报等，是了解外军发展和动态的重要参考。欢迎合作交流。可开正式发票</div>
+      </div>
+    </div>	
+	
+    <div class="section" onclick="showQr('吾观沧海.png', '吾观沧海')">
+      <img data-img="吾观沧海.jpg">
+      <div>
+        <h3>吾观沧海</h3>
+        <div class="tip">1、海洋战略;2、防务知识;3、海洋科考、工程仪器设备;4、无人系统UAV、AUV、UGV等知识;5、个人感悟。</div>
+      </div>
+    </div>
+
+    <div class="section" onclick="showQr('无人机与无人机反制行业.png', '无人机与无人机反制行业')">
+      <img data-img="无人机与无人机反制行业.jpg">
+      <div>
+        <h3>无人机与无人机反制行业</h3>
+        <div class="tip">专注全球无人机与反无人机技术，传播行业知识与文化。Focus on global UAV and AntiUAV technology, spread industry knowledge and culture.</div>
+      </div>
+    </div>
+
+    <div class="section" onclick="showQr('无人争锋.png', '无人争锋')">
+      <img data-img="无人争锋.jpg">
+      <div>
+        <h3>无人争锋</h3>
+        <div class="tip">远望智库旗下无人装备领域前沿资讯平台</div>
+      </div>
+    </div>
+
+    <div id="X" class="letter-header">X</div>	
+    <div class="section" onclick="showQr('晓光外军研究.png', '晓光外军研究')">
+      <img data-img="晓光外军研究.jpg">
+      <div>
+        <h3>晓光外军研究</h3>
+        <div class="tip">外军研究</div>
+      </div>
+    </div>
+
+    <div id="Y" class="letter-header">Y</div>	
+    <div class="section" onclick="showQr('渊亭防务.png', '渊亭防务')">
+      <img data-img="渊亭防务.jpg">
+      <div>
+        <h3>渊亭防务</h3>
+        <div class="tip">渊亭防务是渊亭科技旗下防务智能品牌，致力于成为中国智能防务先行者和领导者，专注一站式AI+国防解决方案，产品自主研发、安全可控，架构搭建完善，基于自主研发的多智能体强化学习、认知推理、数字孪生等前沿技术，为我国国防行业提供全生命周期支持。</div>
+      </div>
+    </div>
+
+    <div id="Z" class="letter-header">Z</div>	
+    <div class="section" onclick="showQr('知远战略与防务研究所.png', '知远战略与防务研究所')">
+      <img data-img="知远战略与防务研究所.jpg">
+      <div>
+        <h3>知远战略与防务研究所</h3>
+        <div class="tip">独立的战略和防务研究机构，立足于防务动态和学术热点的追踪分析，着眼于长远性、战略性问题的深入研究，并为国家有关机构及决策者提供独立、客观的战略与政策建议。</div>
+      </div>
+    </div>	
+	
+    <div class="section" onclick="showQr('战略前沿技术.png', '战略前沿技术')">
+      <img data-img="战略前沿技术.jpg">
+      <div>
+        <h3>战略前沿技术</h3>
+        <div class="tip">“战略前沿技术“公众号为远望智库旗下前沿资讯媒体。“远望智库“聚焦前沿科技领域，围绕军民融合、科技创新、管理创新等主题，开展情报挖掘、战略研究、规划论证、评估评选等工作，为管理决策、产业规划、企业发展、机构投资提供情报、咨询等服务。</div>
+      </div>
+    </div>
+
+    <div class="section" onclick="showQr('中兵智库.png', '中兵智库')">
+      <img data-img="中兵智库.jpg">
+      <div>
+        <h3>中兵智库</h3>
+        <div class="tip">为建设技术先进、布局合理、灵活反应、开放融合的国防科技工业体系不懈奋斗!</div>
+      </div>
+    </div>	
+	
+    <div class="section" onclick="showQr('中土中道.png', '中土中道')">
+      <img data-img="中土中道.jpg">
+      <div>
+        <h3>中土中道</h3>
+        <div class="tip">大道之行，天下为公</div>
+      </div>
+    </div>	
+	
+    <div class="section" onclick="showQr('战防前哨.png', '战防前哨')">
+      <img data-img="战防前哨.jpg">
+      <div>
+        <h3>战防前哨</h3>
+        <div class="tip">立足军事动态和学术热点的跟踪研究，着眼于热点性、关键性、长远性后装保障、作战防务、装备建设问题，旨在向军队、军工集团、参军企业等单位，提供装备保障、后勤保障、作战指挥……</div>
+      </div>
+    </div>	
+		
+    <div class="section" onclick="showQr('中国舰船研究.png', '中国舰船研究')">
+      <img data-img="中国舰船研究.jpg">
+      <div>
+        <h3>中国舰船研究</h3>
+        <div class="tip">推广《中国舰船研究》核心学术期刊，传播舰船科技知识。编辑部QQ群:348047225 编辑部微信号:zgjcyjbjb 论文投稿:www.ship-research.com</div>
+      </div>
+    </div>
+
+    <div class="section" onclick="showQr('装备参考.png', '装备参考')">
+      <img data-img="装备参考.jpg">
+      <div>
+        <h3>装备参考</h3>
+        <div class="tip">远望智库旗下武器装备领域前沿资讯平台</div>
+      </div>
+    </div>
+
+    <div class="section" onclick="showQr('占豪.png', '占豪')">
+      <img data-img="占豪.jpg">
+      <div>
+        <h3>占豪</h3>
+        <div class="tip">国际局势·财经投资·国学哲学|连续6年新媒体百大人物/自媒体表现大奖/受中国企业关注的自媒体账号|我们一起同行，我们一起进步!</div>
+      </div>
+    </div>
+	
+    <div class="section" onclick="showQr('战舰一号.png', '战舰一号')">
+      <img data-img="战舰一号.jpg">
+      <div>
+        <h3>战舰一号</h3>
+        <div class="tip">关注海洋战略、海上作战、海军建设，学习海军理论的交流平台。</div>
+      </div>
+    </div>
+
+    <div class="section" onclick="showQr('战术导弹技术.png', '战术导弹技术')">
+      <img data-img="战术导弹技术.jpg">
+      <div>
+        <h3>战术导弹技术</h3>
+        <div class="tip">本刊创刊于1980年，中文核心期刊，是为导弹的研究、设计、制造、试验、使用等服务的学术期刊。该公众号旨在及时发布刊物出版服务信息，定期推送优秀论文、选题指南,征稿启事，传播论文写作知识，以及动态资讯等。</div>
+      </div>
+    </div>	
+    
+    <div class="section" onclick="showQr('支点科技信息.png', '支点科技信息')">
+      <img data-img="支点科技信息.jpg">
+      <div>
+        <h3>支点科技信息</h3>
+        <div class="tip">兵者国之大事死生之地存亡之道不可不察也，知己知彼百战不殆。本公众号以传播国外最新军事动态、国防军工视频为己任，旨在宣传国防观念，普及军事知识，分享前沿科技、欢迎广大军武迷、军事家、军工侠关注支点军事!</div>
+      </div>
+    </div>
+
+    <div class="section" onclick="showQr('中国船舶709所.png', '中国船舶709所')">
+      <img data-img="中国船舶709所.jpg">
+      <div>
+        <h3>中国船舶709所</h3>
+        <div class="tip">中国船舶集团有限公司第七〇九研究所</div>
+      </div>
+    </div>	
+    
+    <div class="section" onclick="showQr('中国南海研究院.png', '中国南海研究院')">
+      <img data-img="中国南海研究院.jpg">
+      <div>
+        <h3>中国南海研究院</h3>
+        <div class="tip">中国南海研究院是以南海为专门研究对象并从事相关学术交流的智库，现已形成系统的涉南海和海洋问题研究领域，与美国、英国、澳大利亚、日本、韩国、新加坡和台湾等全球二十多个国家和地区的近百家知名智库建立了合作关系和学术联系。</div>
+      </div>
+    </div>
+
+    <div class="footer">
+      © 2025 公众号导航页 | 点击卡片 → 长按二维码 → 关注公众号
+    </div>
+  </div>
+
+<script>
+    // 图片路径配置
+    const IMG_BASE_PATH = 'image/';
+    const QR_CODE_PATH = 'qrcode/';
+
+    // 设置头像图片路径
+    document.querySelectorAll('img[data-img]').forEach(img => {
+      img.src = IMG_BASE_PATH + img.getAttribute('data-img');
+    });
+
+    // 优化字母导航点击事件
+    document.querySelectorAll('.index-bar a').forEach(link => {
+      // 同时处理点击（桌面端）和触摸（移动端）事件
+      link.addEventListener('click', handleNavClick);
+      link.addEventListener('touchstart', handleNavClick); // 触摸开始时立即响应
+
+      function handleNavClick(e) {
+        e.preventDefault(); // 阻止默认跳转行为
+        e.stopPropagation(); // 阻止事件冒泡
+
+        const targetId = this.getAttribute('href').substring(1);
+        const targetElement = document.getElementById(targetId);
+        
+        if (targetElement) {
+          // 使用requestAnimationFrame优化滚动性能
+          requestAnimationFrame(() => {
+            const offsetTop = targetElement.offsetTop - 10;
+            window.scrollTo({
+              top: offsetTop,
+              behavior: 'instant' // 即时滚动，提升响应速度
+            });
+            history.pushState(null, null, '#' + targetId);
+          });
+        }
+      }
+    });
+
+    // 显示二维码
+    function showQr(qrCodeUrl, accountName) {
+      // 构建完整路径
+      if (!qrCodeUrl.startsWith('http')) {
+        qrCodeUrl = QR_CODE_PATH + qrCodeUrl;
+      }
+
+      // 创建遮罩层
+      const mask = document.createElement('div');
+      mask.className = 'qr-mask';
+      
+      // 创建图片元素
+      const img = document.createElement('img');
+      img.src = qrCodeUrl;
+      img.alt = accountName;
+      
+      // 点击遮罩关闭
+      mask.appendChild(img);
+      mask.onclick = function() {
+        document.body.removeChild(mask);
+      };
+      
+      // 防止点击图片时关闭
+      img.onclick = function(e) {
+        e.stopPropagation();
+      };
+      
+      document.body.appendChild(mask);
+    }
+
+    // 统计公众号数量
+    function updateStats() {
+      const total = document.querySelectorAll('.section').length;
+      const now = new Date();
+      const dateStr = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日`;
+      document.getElementById('statsContainer').textContent = 
+        `截至${dateStr}，共接入${total}个公众号，后续持续更新中`;
+    }
+
+    // 页面加载完成后执行
+    window.onload = updateStats;
+  </script>
+</body>
+</html>
